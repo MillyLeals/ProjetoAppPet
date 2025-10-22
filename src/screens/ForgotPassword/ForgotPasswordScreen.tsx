@@ -1,16 +1,12 @@
 import React from 'react';
-import { View, Text, Image, StyleSheet, Dimensions, TextInput, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, Dimensions, TextInput, TouchableOpacity } from 'react-native';
 import BottomWave from '../../components/common/BottomWave';
 import LoginButton from '../../components/common/LoginButton';
 import { StackScreenProps } from '@react-navigation/stack';
+import PetInput from '../../components/common/PetInput'; 
+import { RootStackParamList } from '../../../App'; 
 
 const { width, height } = Dimensions.get('window');
-
-type RootStackParamList = {
-    Welcome: undefined;
-    Login: undefined;
-    ForgotPassword: undefined;
-};
 
 interface ForgotPasswordScreenProps {
     navigation: StackScreenProps<RootStackParamList, 'ForgotPassword'>['navigation'];
@@ -28,9 +24,8 @@ const ForgotPasswordScreen: React.FC<ForgotPasswordScreenProps> = ({ navigation 
                     enviaremos um link para alteração da senha.
                 </Text>
 
-                <View style={styles.inputContainer}>
-                    <TextInput
-                        style={styles.input}
+                <View style={styles.inputWrapper}>
+                    <PetInput
                         placeholder="Email"
                         keyboardType="email-address"
                         autoCapitalize="none"
@@ -38,12 +33,12 @@ const ForgotPasswordScreen: React.FC<ForgotPasswordScreenProps> = ({ navigation 
                 </View>
 
                 <View style={{ marginTop: 150 }}>
-                  <LoginButton onPress={() => console.log('Confirmar pressionado')} title="Confirmar" />
+                    <LoginButton onPress={() => console.log('Confirmar pressionado')} title="Confirmar" />
                 </View>
 
                 <View style={styles.signupContainer}>
                     <Text style={styles.signupText}>Não tem um cadastro?</Text>
-                    <TouchableOpacity onPress={() => console.log('Cadastre-se pressionado')}>
+                    <TouchableOpacity onPress={() => navigation.navigate('Register')}>
                         <Text style={styles.signupLink}>cadastre-se</Text>
                     </TouchableOpacity>
                 </View>
@@ -57,7 +52,7 @@ const ForgotPasswordScreen: React.FC<ForgotPasswordScreenProps> = ({ navigation 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#ffff',
+        backgroundColor: '#FFFF',
         alignItems: 'center',
         justifyContent: 'space-between',
     },
@@ -96,25 +91,8 @@ const styles = StyleSheet.create({
         marginBottom: 30,
         paddingHorizontal: 20,
     },
-    inputContainer: {
+    inputWrapper: {
         width: '92%',
-        height: 50,
-        flexDirection: 'row',
-        alignItems: 'center',
-        backgroundColor: '#FFF',
-        borderRadius: 8,
-        marginBottom: 22,
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.1,
-        shadowRadius: 5,
-        elevation: 4,
-        paddingHorizontal: 15,
-    },
-    input: {
-        flex: 1,
-        height: '100%',
-        color: '#6C6A6A',
     },
     signupContainer: {
         flexDirection: 'row',
