@@ -37,6 +37,20 @@ const MyPetsScreen: React.FC<MyPetsScreenProps> = ({ navigation }) => {
         />
     );
 
+    const handleTabNavigation = (route: TabRoutes) => {
+        setActiveTab(route); 
+
+        if (route === 'Pets') {
+        navigation.navigate('MyPets'); 
+    } else if (route === 'Informacoes') {
+        navigation.navigate('Education');
+    } else if (route === 'Perfil') {
+        navigation.navigate('EditProfile');
+    } else if (route === 'Configuracoes') { 
+        navigation.navigate('Settings');
+    }
+    };
+
     return (
         <View style={styles.mainContainer}>
             
@@ -60,11 +74,9 @@ const MyPetsScreen: React.FC<MyPetsScreenProps> = ({ navigation }) => {
             </View>
 
             <View style={[styles.tabBarContainer, { paddingBottom: insets.bottom, height: TAB_BAR_HEIGHT + insets.bottom }]}>
-                 <CustomTabBar 
+                <CustomTabBar 
                     activeRoute={activeTab} 
-                    onNavigate={(route) => {
-                        setActiveTab(route);
-                    }} 
+                    onNavigate={handleTabNavigation} 
                 />
             </View>
 
@@ -75,7 +87,7 @@ const MyPetsScreen: React.FC<MyPetsScreenProps> = ({ navigation }) => {
 const styles = StyleSheet.create({
     mainContainer: {
         flex: 1,
-        backgroundColor: '#FFFF',
+        backgroundColor: '#F5F5F5',
     },
     contentWrapper: {
         flex: 1,
@@ -104,7 +116,7 @@ const styles = StyleSheet.create({
     addButtonContainer: {
         position: 'absolute',
         right: 20,
-        top: 15, 
+        top: 600, 
         zIndex: 1, 
     },
     listContent: {
@@ -116,7 +128,7 @@ const styles = StyleSheet.create({
         bottom: 0,
         left: 0,
         right: 0,
-        backgroundColor: '#FFFF', 
+        backgroundColor: '#FFF', 
     }
 });
 

@@ -1,4 +1,3 @@
-// src/screens/Register/RegisterScreen.tsx
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, Dimensions, TextInput, TouchableOpacity } from 'react-native';
 import BottomWave from '../../components/common/BottomWave';

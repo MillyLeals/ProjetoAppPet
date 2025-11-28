@@ -1,9 +1,9 @@
-// src/screens/EditPet/EditPetScreen.tsx
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, Dimensions, TextInput, TouchableOpacity, ScrollView, Platform, Image } from 'react-native';
+import { View, Text, StyleSheet, Dimensions, TouchableOpacity, ScrollView, Platform, Image, Alert } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { StackScreenProps } from '@react-navigation/stack';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import * as ImagePicker from 'expo-image-picker'; 
 
 import LoginButton from '../../components/common/LoginButton';
 import PetInput from '../../components/common/PetInput'; 
@@ -12,6 +12,9 @@ import { RootStackParamList } from '../../../App';
 
 const { width } = Dimensions.get('window');
 const TAB_BAR_HEIGHT = 60; 
+const PRIMARY_PURPLE = '#6B46C1'; 
+const DEFAULT_PET_IMAGE = require('../../assets/images/foto1.jpeg'); 
+
 type TabRoutes = 'Pets' | 'Informacoes' | 'Perfil' | 'Configuracoes';
 
 interface EditPetScreenProps {
@@ -24,14 +27,59 @@ const EditPetScreen: React.FC<EditPetScreenProps> = ({ navigation }) => {
     const [weight, setWeight] = useState('2.4');
     const [breed, setBreed] = useState('Golden Retriever');
     const [activeTab, setActiveTab] = useState<TabRoutes>('Pets');
+    const [profileImageUri, setProfileImageUri] = useState<string | null>(null); 
     const insets = useSafeAreaInsets();
+
+    const handleSave = () => {
+        Alert.alert('Salvo', 'Dados do Pet atualizados!');
+    };
+    
+    const pickImage = async (useCamera: boolean) => {
+        const source = useCamera 
+            ? ImagePicker.launchCameraAsync 
+            : ImagePicker.launchImageLibraryAsync;
+
+        const { status } = useCamera
+            ? await ImagePicker.requestCameraPermissionsAsync()
+            : await ImagePicker.requestMediaLibraryPermissionsAsync();
+
+        if (status !== 'granted') {
+            Alert.alert('Permissão Negada', `É necessário acesso à ${useCamera ? 'câmera' : 'galeria'} para alterar a foto.`);
+            return;
+        }
+
+        let result = await source({
+            mediaTypes: ImagePicker.MediaTypeOptions.Images,
+            allowsEditing: true,
+            aspect: [1, 1],
+            quality: 1,
+        });
+
+        if (!result.canceled && result.assets && result.assets.length > 0) {
+            setProfileImageUri(result.assets[0].uri); 
+        }
+    };
+    
+    const handleImagePick = () => {
+        Alert.alert(
+            "Alterar Foto",
+            "Selecione a origem da nova foto:",
+            [
+                { text: "Tirar Foto", onPress: () => pickImage(true) },
+                { text: "Escolher da Galeria", onPress: () => pickImage(false) },
+                { text: "Cancelar", style: "cancel" },
+            ]
+        );
+    };
+
 
     return (
         <View style={styles.mainContainer}>
             
             <View style={styles.header}>
                 <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
-                    <Ionicons name="arrow-back" size={28} color="#333" />
+                    {/* ⬅️ ÍCONE DE FECHAR (X) */}
+                    <Ionicons name="close-outline" size={30} color="#333" /> 
                 </TouchableOpacity>
                 <Text style={styles.headerTitle}>Editar Pet</Text>
             </View>
@@ -41,16 +89,15 @@ const EditPetScreen: React.FC<EditPetScreenProps> = ({ navigation }) => {
                 <View style={styles.photoSection}>
                     <View style={styles.profileImageContainer}>
                         <Image 
-                            source={require('../../assets/images/foto1.jpeg')} 
+                            source={profileImageUri ? { uri: profileImageUri } : DEFAULT_PET_IMAGE}
                             style={styles.profileImage}
                         />
-                        <TouchableOpacity style={styles.editIconContainer} onPress={() => console.log('Abrir seletor de foto')}>
+                        <TouchableOpacity style={styles.editIconContainer} onPress={handleImagePick}>
                             <Ionicons name="pencil" size={18} color="#6B46C1" />
                         </TouchableOpacity>
                     </View>
                     <Text style={styles.changePhotoText}>Alterar Foto</Text>
                 </View>
-                
                 
                 <PetInput label="Nome" placeholder="Nome do seu pet" value={petName} onChangeText={setPetName} />
                 
@@ -72,12 +119,11 @@ const EditPetScreen: React.FC<EditPetScreenProps> = ({ navigation }) => {
                 <PetInput label="Raça" placeholder="Raça do seu pet" value={breed} onChangeText={setBreed} />
                 
                 <View style={styles.saveButtonWrapper}>
-                    <LoginButton onPress={() => console.log('Salvar Edição')} title="Salvar" />
+                    <LoginButton onPress={handleSave} title="Salvar" />
                 </View>
 
             </ScrollView>
             
-
             <View style={[styles.tabBarContainer, { paddingBottom: insets.bottom, height: TAB_BAR_HEIGHT + insets.bottom }]}>
                  <CustomTabBar 
                     activeRoute={activeTab} 
@@ -92,19 +138,20 @@ const EditPetScreen: React.FC<EditPetScreenProps> = ({ navigation }) => {
 const styles = StyleSheet.create({
     mainContainer: {
         flex: 1,
-        backgroundColor: '#FFFF',
+        backgroundColor: '#F5F5F5',
     },
     header: {
         flexDirection: 'row',
         alignItems: 'center',
         paddingHorizontal: 15,
-        paddingTop: Platform.OS === 'android' ? 40 : 10,
+        paddingTop: Platform.OS === 'android' ? 40 : 10, 
         paddingBottom: 15,
         borderBottomWidth: 1,
         borderBottomColor: '#EEE',
+        justifyContent: 'space-between', 
     },
     backButton: {
-        marginRight: 10,
+        width: 40, 
     },
     headerTitle: {
         fontSize: 20,
@@ -112,7 +159,6 @@ const styles = StyleSheet.create({
         color: '#333',
         flex: 1, 
         textAlign: 'center', 
-        marginLeft: -38,
     },
     scrollContent: {
         padding: 20,
@@ -128,6 +174,7 @@ const styles = StyleSheet.create({
         height: 120,
         borderRadius: 60,
         marginBottom: 10,
+        backgroundColor: '#DDD', 
     },
     profileImage: {
         width: '100%',
@@ -151,7 +198,7 @@ const styles = StyleSheet.create({
     },
     changePhotoText: {
         fontSize: 14,
-        color: '#6B46C1',
+        color: PRIMARY_PURPLE,
         fontWeight: '600',
     },
     saveButtonWrapper: {

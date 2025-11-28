@@ -67,12 +67,12 @@ const styles = StyleSheet.create({
   petName: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: '#3333',
+    color: '#333333bb',
     marginBottom: 2,
   },
   petBreed: {
     fontSize: 14,
-    color: '#6666',
+    color: '#000000b4',
   },
   arrowIcon: {
     marginLeft: 10,

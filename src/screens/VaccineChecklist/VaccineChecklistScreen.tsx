@@ -5,16 +5,16 @@ import { StackScreenProps } from '@react-navigation/stack';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import VaccineCard from '../../components/pet/VaccineCard';
-import AddPetButton from '../../components/common/AddButton'; 
-import { RootStackParamList } from '../../../App'; 
+import AddPetButton from '../../components/common/AddButton';
+import { RootStackParamList } from '../../../App';
 
 const { width } = Dimensions.get('window');
-const TAB_BAR_HEIGHT = 60; 
+const TAB_BAR_HEIGHT = 60;
 
 type TabRoutes = 'Pets' | 'Informacoes' | 'Perfil' | 'Configuracoes';
 
 interface VaccineChecklistScreenProps {
-    navigation: StackScreenProps<RootStackParamList, 'VaccineChecklist'>['navigation']; 
+    navigation: StackScreenProps<RootStackParamList, 'VaccineChecklist'>['navigation'];
 }
 
 type VaccineStatus = 'Próxima' | 'Pendente' | 'Aplicada';
@@ -46,7 +46,7 @@ const VaccineChecklistScreen: React.FC<VaccineChecklistScreenProps> = ({ navigat
         <View style={styles.section}>
             <Text style={styles.sectionTitle}>{title}</Text>
             {data.map(item => (
-                <VaccineCard 
+                <VaccineCard
                     key={item.id}
                     date={item.date}
                     name={item.name}
@@ -60,21 +60,26 @@ const VaccineChecklistScreen: React.FC<VaccineChecklistScreenProps> = ({ navigat
     return (
         <View style={styles.mainContainer}>
             <View style={styles.header}>
-                <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
-                    <Ionicons name="arrow-back" size={28} color="#333" />
+                <TouchableOpacity
+                    onPress={() => navigation.goBack()}
+                    style={styles.backButton}
+                    accessibilityLabel="Fechar"
+                    accessibilityRole="button"
+                >
+                    <Ionicons name="close" size={28} color="#333" />
                 </TouchableOpacity>
                 <Text style={styles.headerTitle}>Checklist Vacinas</Text>
             </View>
 
             <ScrollView contentContainerStyle={styles.scrollContent}>
-                
+
                 {renderSection("Próximas", vaccineData.proximas)}
                 {renderSection("Pendentes", vaccineData.pendentes)}
                 {renderSection("Aplicadas", vaccineData.aplicadas)}
 
             </ScrollView>
 
-            <TouchableOpacity 
+            <TouchableOpacity
                 style={[styles.addButtonContainer, { bottom: 30 + insets.bottom }]}
                 onPress={() => navigation.navigate('RegisterVaccine')}
             >
@@ -100,18 +105,20 @@ const styles = StyleSheet.create({
     },
     backButton: {
         marginRight: 10,
+        padding: 6,
+        borderRadius: 8,
     },
     headerTitle: {
         fontSize: 20,
         fontWeight: 'bold',
         color: '#333',
-        flex: 1, 
-        textAlign: 'center', 
+        flex: 1,
+        textAlign: 'center',
         marginLeft: -38,
     },
     scrollContent: {
         padding: 20,
-        paddingBottom: 100, 
+        paddingBottom: 100,
     },
     section: {
         marginBottom: 20,

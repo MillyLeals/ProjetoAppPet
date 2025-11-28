@@ -7,16 +7,19 @@ import PetActionButton from '../../components/pet/PetActionButton';
 import PetReminderCard from '../../components/pet/PetReminderCard';
 import CustomTabBar from '../../components/common/CustomTabBar';
 import { RootStackParamList } from '../../../App'; 
+import { Ionicons } from '@expo/vector-icons';
 
 const { width, height } = Dimensions.get('window');
 const TAB_BAR_HEIGHT = 60; 
+
+type TabRoutes = 'Pets' | 'Informacoes' | 'Perfil' | 'Configuracoes';
 
 interface PetProfileScreenProps {
     navigation: StackScreenProps<RootStackParamList, 'PetProfile'>['navigation']; 
 }
 
 const PetProfileScreen: React.FC<PetProfileScreenProps> = ({ navigation }) => {
-    const [activeTab, setActiveTab] = React.useState<'Pets' | 'Informacoes' | 'Perfil' | 'Configuracoes'>('Pets');
+    const [activeTab, setActiveTab] = React.useState<TabRoutes>('Pets');
     const insets = useSafeAreaInsets(); 
     const pet = {
         name: 'Luke',
@@ -24,6 +27,24 @@ const PetProfileScreen: React.FC<PetProfileScreenProps> = ({ navigation }) => {
         weight: '2,4 kg',
         breed: 'Golden',
         profilePic: require('../../assets/images/foto1.jpeg') 
+    };
+
+    const handleTabNavigation = (route: TabRoutes) => {
+        setActiveTab(route);
+        switch (route) {
+            case 'Pets':
+                navigation.navigate('MyPets'); 
+                break;
+            case 'Informacoes':
+                navigation.navigate('Education'); 
+                break;
+            case 'Perfil':
+                navigation.navigate('EditProfile'); 
+                break;
+            case 'Configuracoes':
+                navigation.navigate('Settings');
+                break;
+        }
     };
 
     return (
@@ -62,13 +83,13 @@ const PetProfileScreen: React.FC<PetProfileScreenProps> = ({ navigation }) => {
                     iconName="thermometer" 
                     title="Vacina Antirrábica" 
                     subtitle="Vence em 15 de Julho"
-                    onPress={() => console.log('Ver lembrete')}
+                    onPress={() => navigation.navigate('VaccineChecklist')} 
                 />
                  <PetReminderCard 
                     iconName="calendar" 
                     title="Consulta de Rotina" 
                     subtitle="Agendada para 10 de Abril"
-                    onPress={() => console.log('Ver lembrete')}
+                    onPress={() => navigation.navigate('Agenda')} 
                 />
 
                 <View style={styles.actionBlocks}>
@@ -90,7 +111,7 @@ const PetProfileScreen: React.FC<PetProfileScreenProps> = ({ navigation }) => {
                     <PetActionButton 
                         iconName="nutrition"
                         title="Alimentação/Peso" 
-                        onPress={() => console.log('Abrir Controle de Alimentação/Peso')} 
+                        onPress={() => navigation.navigate('WeightFeedingControl')}
                     />
                     <PetActionButton 
                         iconName="checkmark-done-circle" 
@@ -104,9 +125,9 @@ const PetProfileScreen: React.FC<PetProfileScreenProps> = ({ navigation }) => {
             </ScrollView>
 
             <View style={[styles.tabBarContainer, { paddingBottom: insets.bottom, height: TAB_BAR_HEIGHT + insets.bottom }]}>
-                 <CustomTabBar 
+                <CustomTabBar 
                     activeRoute={activeTab} 
-                    onNavigate={(route) => setActiveTab(route)} 
+                    onNavigate={handleTabNavigation}
                 />
             </View>
         </View>
@@ -116,7 +137,7 @@ const PetProfileScreen: React.FC<PetProfileScreenProps> = ({ navigation }) => {
 const styles = StyleSheet.create({
     mainContainer: {
         flex: 1,
-        backgroundColor: '#FFFF',
+        backgroundColor: '#F5F5F5',
     },
     scrollView: {
         flex: 1,

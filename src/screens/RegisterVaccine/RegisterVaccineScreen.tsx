@@ -1,13 +1,17 @@
-// src/screens/RegisterVaccine/RegisterVaccineScreen.tsx
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, Dimensions, TextInput, TouchableOpacity, ScrollView, Platform } from 'react-native';
+import { 
+    View, Text, StyleSheet, Dimensions, TextInput, 
+    TouchableOpacity, ScrollView, Platform 
+} from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { StackScreenProps } from '@react-navigation/stack';
+import DateTimePicker from '@react-native-community/datetimepicker';
 
 import LoginButton from '../../components/common/LoginButton';
 import PetInput from '../../components/common/PetInput'; 
 import { RootStackParamList } from '../../../App'; 
 
+const PRIMARY_PURPLE = '#6B46C1';
 const { width } = Dimensions.get('window');
 
 interface RegisterVaccineScreenProps {
@@ -15,22 +19,35 @@ interface RegisterVaccineScreenProps {
 }
 
 const RegisterVaccineScreen: React.FC<RegisterVaccineScreenProps> = ({ navigation }) => {
+    
     const [vaccineName, setVaccineName] = useState('');
+
     const [applicationDate, setApplicationDate] = useState('Selecione a data');
     const [nextDoseDate, setNextDoseDate] = useState('Selecione a data');
+
+    const [showApplicationPicker, setShowApplicationPicker] = useState(false);
+    const [showNextDosePicker, setShowNextDosePicker] = useState(false);
+
     const [lotNumber, setLotNumber] = useState('');
     const [professional, setProfessional] = useState('');
     const [observation, setObservation] = useState('');
 
-    // Estilo base de input reutilizado da AddEventScreen para campos de seleção
     const baseInputStyle = styles.selectInputContainer;
+
+    const formatDate = (date: Date) => {
+        return date.toLocaleDateString('pt-BR', {
+            day: '2-digit',
+            month: 'long',
+            year: 'numeric'
+        });
+    };
 
     return (
         <View style={styles.container}>
             
             <View style={styles.header}>
                 <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
-                    <Ionicons name="arrow-back" size={28} color="#333" />
+                    <Ionicons name="close" size={30} color="#333" />
                 </TouchableOpacity>
                 <Text style={styles.headerTitle}>Registrar Nova Vacina</Text>
             </View>
@@ -45,16 +62,52 @@ const RegisterVaccineScreen: React.FC<RegisterVaccineScreenProps> = ({ navigatio
                 />
 
                 <Text style={styles.label}>Data da Aplicação</Text>
-                <TouchableOpacity style={baseInputStyle} onPress={() => console.log('Abrir seletor de data')}>
+
+                <TouchableOpacity 
+                    style={baseInputStyle} 
+                    onPress={() => setShowApplicationPicker(true)}
+                >
                     <Text style={styles.selectInputPlaceholder}>{applicationDate}</Text>
-                    <Ionicons name="calendar-outline" size={20} color="#6B46C1" />
+                    <Ionicons name="calendar-outline" size={22} color={PRIMARY_PURPLE} />
                 </TouchableOpacity>
 
+                {showApplicationPicker && (
+                    <DateTimePicker
+                        value={new Date()}
+                        mode="date"
+                        display="spinner"
+                        onChange={(event, selectedDate) => {
+                            if (selectedDate) {
+                                setApplicationDate(formatDate(selectedDate));
+                            }
+                            setShowApplicationPicker(false);
+                        }}
+                    />
+                )}
+
                 <Text style={styles.label}>Próxima Dose (opcional)</Text>
-                <TouchableOpacity style={baseInputStyle} onPress={() => console.log('Abrir seletor de próxima dose')}>
+
+                <TouchableOpacity 
+                    style={baseInputStyle} 
+                    onPress={() => setShowNextDosePicker(true)}
+                >
                     <Text style={styles.selectInputPlaceholder}>{nextDoseDate}</Text>
-                    <Ionicons name="calendar-outline" size={20} color="#6B46C1" />
+                    <Ionicons name="calendar-outline" size={22} color={PRIMARY_PURPLE} />
                 </TouchableOpacity>
+
+                {showNextDosePicker && (
+                    <DateTimePicker
+                        value={new Date()}
+                        mode="date"
+                        display="spinner"
+                        onChange={(event, selectedDate) => {
+                            if (selectedDate) {
+                                setNextDoseDate(formatDate(selectedDate));
+                            }
+                            setShowNextDosePicker(false);
+                        }}
+                    />
+                )}
                 
                 <PetInput 
                     label="Lote (opcional)"
@@ -71,6 +124,7 @@ const RegisterVaccineScreen: React.FC<RegisterVaccineScreenProps> = ({ navigatio
                 />
 
                 <Text style={styles.label}>Observação (opcional)</Text>
+
                 <View style={styles.textAreaContainer}>
                     <TextInput 
                         style={styles.inputArea}
@@ -78,7 +132,7 @@ const RegisterVaccineScreen: React.FC<RegisterVaccineScreenProps> = ({ navigatio
                         multiline={true}
                         value={observation}
                         onChangeText={setObservation}
-                        placeholderTextColor="#6B46C1"
+                        placeholderTextColor={PRIMARY_PURPLE}
                     />
                 </View>
                 
@@ -99,22 +153,24 @@ const styles = StyleSheet.create({
     header: {
         flexDirection: 'row',
         alignItems: 'center',
+        justifyContent: 'center',
         paddingHorizontal: 15,
         paddingTop: Platform.OS === 'android' ? 40 : 10,
         paddingBottom: 15,
         borderBottomWidth: 1,
         borderBottomColor: '#EEE',
+        position: 'relative',
     },
     backButton: {
-        marginRight: 10,
+        position: 'absolute',
+        left: 10,
+        padding: 5,
+        top: Platform.OS === 'android' ? 38 : 10,
     },
     headerTitle: {
         fontSize: 20,
         fontWeight: 'bold',
         color: '#333',
-        flex: 1, 
-        textAlign: 'center', 
-        marginLeft: -38,
     },
     scrollContent: {
         padding: 20,
@@ -127,7 +183,6 @@ const styles = StyleSheet.create({
         marginTop: 15, 
         marginBottom: 8,
     },
-    // Estilo unificado de input/dropdown (copiado do PetInput)
     selectInputContainer: {
         width: '100%',
         height: 55,
@@ -148,18 +203,16 @@ const styles = StyleSheet.create({
     },
     selectInputPlaceholder: {
         fontSize: 16,
-        color: '#6B46C1', 
+        color: PRIMARY_PURPLE,
     },
-    // Container para a Área de Observação (Textarea)
     textAreaContainer: {
         width: '100%',
-        height: 120, // Altura maior para o textarea
+        height: 120, 
         backgroundColor: '#F3F4FF',
         borderRadius: 15,
         paddingHorizontal: 15,
-        paddingTop: 10, // Padding para o texto não colar no topo
+        paddingTop: 10, 
         marginBottom: 15,
-        // Mantendo consistência visual
         borderWidth: 1, 
         borderColor: '#DFD0F7',
         shadowColor: '#000',

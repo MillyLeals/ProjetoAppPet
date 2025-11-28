@@ -4,6 +4,8 @@ import { StyleSheet, Text, TouchableOpacity, ViewStyle, TextStyle } from 'react-
 interface LoginButtonProps {
     onPress: () => void;
     title: string;
+    color?: string;
+    
 }
 
 const LoginButton: React.FC<LoginButtonProps> = ({ onPress, title }) => {

@@ -43,6 +43,20 @@ const HealthHistoryScreen: React.FC<HealthHistoryScreenProps> = ({ navigation })
     const [activeFilter, setActiveFilter] = useState<HealthFilter>('Consultas');
     const insets = useSafeAreaInsets();
     
+    const handleTabNavigation = (route: TabRoutes) => {
+        setActiveTab(route);
+
+        if (route === 'Pets') {
+            navigation.navigate('MyPets');
+        } else if (route === 'Informacoes') {
+            navigation.navigate('Education');
+        } else if (route === 'Perfil') {
+            navigation.navigate('EditProfile');
+        } else if (route === 'Configuracoes') {
+            navigation.navigate('Settings');
+        }
+    };
+
     const filters: HealthFilter[] = ['Consultas', 'Medicamentos', 'Alergia', 'Cirurgia', 'Exame', 'Outro'];
 
     const allHistoryData = [
@@ -61,7 +75,7 @@ const HealthHistoryScreen: React.FC<HealthHistoryScreenProps> = ({ navigation })
             
             <View style={styles.header}>
                 <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
-                    <Ionicons name="arrow-back" size={28} color="#333" />
+                    <Ionicons name="close-outline" size={30} color="#333" />
                 </TouchableOpacity>
                 <Text style={styles.headerTitle}>Histórico de Saúde</Text>
             </View>
@@ -119,10 +133,12 @@ const HealthHistoryScreen: React.FC<HealthHistoryScreenProps> = ({ navigation })
             </TouchableOpacity>
 
             <View style={[styles.tabBarContainer, { paddingBottom: insets.bottom, height: TAB_BAR_HEIGHT + insets.bottom }]}>
+                
                 <CustomTabBar 
                     activeRoute={activeTab} 
-                    onNavigate={(route) => setActiveTab(route)} 
+                    onNavigate={handleTabNavigation}
                 />
+
             </View>
 
         </View>
@@ -132,7 +148,7 @@ const HealthHistoryScreen: React.FC<HealthHistoryScreenProps> = ({ navigation })
 const styles = StyleSheet.create({
     mainContainer: {
         flex: 1,
-        backgroundColor: '#FFFF',
+        backgroundColor: '#F5F5F5',
     },
     scrollView: {
         flex: 1,
@@ -148,6 +164,7 @@ const styles = StyleSheet.create({
     },
     backButton: {
         marginRight: 10,
+        width: 40, 
     },
     headerTitle: {
         fontSize: 20,

@@ -20,6 +20,16 @@ import AddHealthRecordScreen from './src/screens/AddHealthRecord/AddHealthRecord
 import VaccineChecklistScreen from './src/screens/VaccineChecklist/VaccineChecklistScreen'; 
 import RegisterVaccineScreen from './src/screens/RegisterVaccine/RegisterVaccineScreen';
 import RegisterScreen from './src/screens/Register/RegisterScreen';
+import EducationScreen from './src/screens/Education/EducationScreen';
+import EditProfileScreen from './src/screens/EditProfile/EditProfileScreen';
+import SettingsScreen from './src/screens/Settings/SettingsScreen';
+import NotificationSettingsScreen from './src/screens/NotificationSettings/NotificationSettingsScreen';
+import PrivacySettingsScreen from './src/screens/PrivacySettings/PrivacySettingsScreen';
+import AboutScreen from './src/screens/About/AboutScreen';
+import WeightFeedingControlScreen from './src/screens/WeightFeedingControl/WeightFeedingControlScreen';
+import AddWeightRecordScreen from './src/screens/AddWeightRecord/AddWeightRecordScreen';
+import AddFeedingRecordScreen from './src/screens/AddFeedingRecord/AddFeedingRecordScreen';
+import EventDetailScreen from './src/screens/EventDetail/EventDetailScreen';
 
 export type RootStackParamList = {
   Welcome: undefined;
@@ -30,12 +40,23 @@ export type RootStackParamList = {
   PetProfile: { petId: string }; 
   AddPet: undefined;
   Agenda: undefined;
-  AddEvent: undefined;
+  AddEvent: { eventId?: string };
   EditPet: { petId: string };
   HealthHistory: undefined;
   AddHealthRecord: undefined;
   VaccineChecklist: undefined; 
   RegisterVaccine: undefined;
+  Education: undefined;
+  EditProfile: undefined;
+  Settings: undefined;
+  NotificationSettings: undefined;
+  PrivacySettings: undefined;
+  About: undefined;
+  WeightFeedingControl: undefined;
+  AddWeightRecord: undefined;
+  AddFeedingRecord: undefined;
+  EventDetail: { eventId: string };
+
 };
 
 const Stack = createStackNavigator<RootStackParamList>();
@@ -63,8 +84,7 @@ export default function App() {
           <Stack.Screen name="Login" component={LoginScreen} />
           <Stack.Screen name="Register" component={RegisterScreen} /> 
           <Stack.Screen name="ForgotPassword" component={ForgotPasswordScreen} />
-      
-
+          
         
           <Stack.Screen name="MyPets" component={MyPetsScreen} />
           <Stack.Screen name="PetProfile" component={PetProfileScreen} />
@@ -76,7 +96,16 @@ export default function App() {
           <Stack.Screen name="AddHealthRecord" component={AddHealthRecordScreen} />
           <Stack.Screen name="VaccineChecklist" component={VaccineChecklistScreen} /> 
           <Stack.Screen name="RegisterVaccine" component={RegisterVaccineScreen} /> 
-         
+          <Stack.Screen name="Education" component={EducationScreen} />
+          <Stack.Screen name="EditProfile" component={EditProfileScreen} />
+          <Stack.Screen name="Settings" component={SettingsScreen} />
+          <Stack.Screen name="NotificationSettings" component={NotificationSettingsScreen} />
+          <Stack.Screen name="PrivacySettings" component={PrivacySettingsScreen} />
+          <Stack.Screen name="About" component={AboutScreen} />
+          <Stack.Screen name="WeightFeedingControl" component={WeightFeedingControlScreen} />
+          <Stack.Screen name="AddWeightRecord" component={AddWeightRecordScreen} />
+          <Stack.Screen name="AddFeedingRecord" component={AddFeedingRecordScreen} />
+          <Stack.Screen name="EventDetail" component={EventDetailScreen} />
           
         </Stack.Navigator>
       </NavigationContainer>
